@@ -202,3 +202,115 @@ df['column'].fillna(value='column value', inplace=True)
 column_median = df['column'].median()
 df.fillna({'column' : column_median}, inplace=True)
 ```
+# Handling Duplicate Value
+```
+df[df.duplicated()].count()
+
+# inplace mean in real dataframe 
+df.drop_duplicates(inplace=True)
+# last means last time a row of data added
+df.drop_duplicates(keep='last', inplace=True)
+# first means first time a row of data added
+df.drop_duplicates(keep='first', inplace=True)
+# drop duplicates to a specific column 
+df.drop_duplicates(subset = ['column name'], inplace=True)
+# drop duplicates for multiple specific columns 
+df.drop_duplicates(subset = ['column 1', 'column 2'], inplace=True)
+```
+# Handling Outlier Value
+### Using Isolation Forest
+metode yang secara random memilih kolom dan value nya untuk memisahkan bagian data, pada data yang kompleks karena banyak kolom dan numerical value multi modal
+
+metode yang secara random memilih kolom dan value nya untuk memisahkan bagian data, pada data yang kompleks karena banyak kolom dan numerical value multi modal
+
+validate our predictions karena datanya terdapat counterfeit labels
+```
+# import library
+from sklearn.ensemble import IsolationForest
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import precision_score
+import numpy as np
+
+# fit to the length, left, right, bottom, top and diagonal column as features
+X = df[[‘Length’, ‘Left’, ‘Right’, ‘Bottom’, ‘Top’, ‘Diagonal’]]
+# conterfeit as label
+y = df[‘conterfeit’]
+
+# train test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
+# define the model to fit train data
+clf = IsolationForest(random_state=0)
+clf.fit(X_train)
+y_pred = clf.predict(X_test)
+
+# predict and evaluate test data
+pred = pd.DataFrame({‘pred’: y_pred})
+pred[‘y_pred’] = np.where(pred[‘pred’] == -1, 1, 0)
+y_pred = pred[‘y_pred’]
+# display the precision score
+print(“Precision:”, precision_score(y_test, y_pred))
+```
+### Using One Class SVM
+Another unsupervised machine learning technique that is useful for high dimensional and large data sets
+```
+# import OneClassSVM from sklearn.svm
+from sklearn.svm import OneClassSVM
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import precision_score
+import numpy as np
+
+# define the model
+clf_svm = OneClassSVM(gamma=’auto’)
+clf_svm.fit(X_train)
+
+y_pred_svm = clf_svm.predict(X_test)
+pred[‘svm’] = y_pred_svm
+pred[‘svm_pred’] = np.where(pred[‘svm’] == -1, 1, 0)
+y_pred_svm = pred[‘svm_pred’]
+
+# checking precision score before outlier handling
+print(“SVM Precision:”, precision_score(y_test, y_pred_svm))
+```
+
+
+# Data Visualization
+using matplotlib and seborn
+## Histogram
+```
+# plot the distribution using histogram argument at kind
+# x-axis contain bins that devide the values into intervals
+# y-axis contain frequency
+df['column'].plot(kind='hist')
+
+# plot histogram for all numeric columns
+df.hist
+```
+## Scatter Plot
+```
+# plot scatter to check relation betwen column 1 and column 2
+df.plot(x='column 1', y='column 2', kind='scatter')
+```
+## Box Plot
+```
+# plot the boxplot to detect outliers
+# x-axis sebagai nama kolom yang dicari outliernya
+def boxplot(column):
+		# column menerima argument, kemudian dimasukan ke fstring
+		sns.boxplot(data=df, x=df[f'{column}'])
+		plt.title(f'Boxplot of Swiss Banknote {column}')
+		plt.show()
+
+# jalankan fungsi boxplot
+boxplot('Column 1')
+boxplot('Column 2')
+boxplot('Column 3')
+```
+# Saving to File
+```
+# save dataset output as csv file 
+df.to_csv('Data Output.csv')
+
+# specify a directory to save a csv file
+df.to_csv('C:/Users/username/Documents/Data Output.csv')
+```
