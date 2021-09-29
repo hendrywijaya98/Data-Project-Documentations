@@ -124,6 +124,33 @@ df['year'] = df['dt_iso'].dt.year
 df['month'] = df['dt_iso'].dt.month
 df['day'] = df['dt_iso'].dt.day
 df['hour'] = df['dt_iso'].dt.hour
+
+# function to transform date column
+def DateTransform(data, column):
+	# change data type column to datetime
+	data[column] = pd.to_datetime(data[column])
+	
+	# date transformation to year/month/day single column
+	data['year'] = data[column].dt.year
+	data['month'] = data[column].dt.month
+	data['day'] = data[column].dt.day
+	data['hour'] = data[column].dt.hour
+		
+	return data['year'], data['month'], data['day'], data['hour']
+```
+String to Numeric Transformation
+```
+# change column from decimal to numeric 
+df['CAD_USD'] = pd.to_numeric(df.CAD_USD, errors='coerce')
+df.dropna(inplace=True)
+
+# change column from string (object) to float
+for row in range(len(df)):
+    if 'MWp' in df.loc[row, 'Peak_capacity']:
+        df.loc[row,"New_Col"] = float(df.loc[row, 'Peak_capacity']
+                                      .split('MWp')[0])
+    else:
+        df.loc[row,"New_Col"] = float(df.loc[row, 'Peak_capacity'])
 ```
 ### Selecting Column by Index using loc and iloc
 **loc** is used to **accessing rows** and **columns by label** or **index** based on boolean array
@@ -305,6 +332,30 @@ def boxplot(column):
 boxplot('Column 1')
 boxplot('Column 2')
 boxplot('Column 3')
+```
+## Bar Plot
+special snippet barplot visualization with seaborn 
+```
+# Set up Matplotlib Figure
+f, ax1 = plt.subplots(1, 1, figsize=(15, 8))
+
+# Set up the data for the visualization
+data_for_plot = df.groupby(by='Country').sum()
+data_for_plot.reset_index(inplace=True)
+data_for_plot.sort_values(by='Area_Acres', inplace=True)
+values_on_x_axis = 'Country'
+values_on_y_axis = 'Area_Acres'
+
+# Setup actual data visualization in Seaborn
+sns.barplot(x=values_on_x_axis,y=values_on_y_axis,
+            data=data_for_plot,
+            ax = ax1,
+            palette="Blues")
+
+# Set additional elements of the Visualization
+plt.title("Total Area per country", fontsize=20)
+plt.xlabel("Country", fontsize=15)
+plt.ylabel("Total Area in Acres", fontsize=15)
 ```
 # Saving to File
 ```
