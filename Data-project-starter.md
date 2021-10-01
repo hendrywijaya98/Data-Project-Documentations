@@ -151,6 +151,29 @@ for row in range(len(df)):
                                       .split('MWp')[0])
     else:
         df.loc[row,"New_Col"] = float(df.loc[row, 'Peak_capacity'])
+
+# change colum from string to int 
+# with for loop and store variable from each interate
+foll_temp = []
+# iterate df column
+for colname, colval in influencer_df.iterrows():
+    # if df follower == str thousands
+    if 'thousand' in colval['Followers']:
+        # remove "thousands" menggunakan replace 
+        num1 = colval['Followers'].replace('thousand','')
+        # convert into numeric and multiple by 1000
+        num1 = int(float(num1)*1000)
+        foll_temp.append(num1)
+    # elif df follower == str million
+    else:
+        # remove "million" menggunakan replace 
+        num2 = colval['Followers'].replace('million','')
+        # convert into numeric and multiple by 1000000
+        num2 = int(float(num2) * 1000000)
+        foll_temp.append(num2)
+ 
+foll_temp = pd.Series(foll_temp)
+influencer_df['Followers'] = foll_temp
 ```
 ### Selecting Column by Index using loc and iloc
 **loc** is used to **accessing rows** and **columns by label** or **index** based on boolean array
