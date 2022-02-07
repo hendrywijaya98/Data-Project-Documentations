@@ -9,7 +9,7 @@ import seaborn as sns
 ## Data Inspection
 ### Reading data and Creating DataFrame
 ```
-# reading data
+# reading data (from csv file)
 PATH = 'https://raw.githubusercontent.com/rmpbastos/data_sets/main/kaggle_housing/house_df.csv'
 PATH = 'path_to_data.csv'
 df = pd.read_csv(PATH)
@@ -22,6 +22,19 @@ type(df)
 
 # read dataframe with set index to certain column
 df = pd.read_csv(PATH, index_col='column')
+
+# reading data from excel file
+excel_path = 'https://github.com/bharathirajatut/sample-excel-dataset/blob/master/american_influencer_data.xls'
+df = pd.read_excel(excel_path)
+
+# reading data from excel with specific sheet
+df = pd.read_excel(excel_path, sheet_name = 'Sheet 1')
+
+# reading data from excel with multiple sheet
+df = pd.read_excel(excel_path, sheet_name = ['Sheet 1', 'Sheet 2', 'Sheet 3', 'Sheet 4'])
+
+# reading data from excel with all sheet
+df = pd.read_excel(excel_path, sheet_name = None)
 
 # set index into one column
 df.set_index('column', inplace=True)
