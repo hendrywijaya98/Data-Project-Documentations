@@ -51,8 +51,14 @@ df.tail()
 # check dataset info, including each colum data type and null values
 df.info()
 
-# check dataframe describe
+# check dataframe describe (only applies on numeric or continuous column)
 df.describe()
+
+# check dataframe describe for categorical column
+df.describe(include=include=['category'])
+
+# check dataframe describe for string or object column
+df.describe(include=include=[object])
 
 # check dataset dimension, in this case for column and rows
 df.shape
