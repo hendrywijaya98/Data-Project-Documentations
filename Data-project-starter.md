@@ -141,13 +141,13 @@ df['hour'] = df['dt_iso'].dt.hour
 # function to transform date column
 def DateTransform(data, column):
 	# change data type column to datetime
-	data[column] = pd.to_datetime(data[column])
+	data[date_column] = pd.to_datetime(data[date_column])
 	
 	# date transformation to year/month/day single column
-	data['year'] = data[column].dt.year
-	data['month'] = data[column].dt.month
-	data['day'] = data[column].dt.day
-	data['hour'] = data[column].dt.hour
+	data['year'] = data[date_column].dt.year
+	data['month'] = data[date_column].dt.month
+	data['day'] = data[date_column].dt.day
+	data['hour'] = data[date_column].dt.hour
 		
 	return data['year'], data['month'], data['day'], data['hour']
 ```
