@@ -341,7 +341,122 @@ y_pred_svm = pred[‘svm_pred’]
 # checking precision score before outlier handling
 print(“SVM Precision:”, precision_score(y_test, y_pred_svm))
 ```
+# Grouping and Aggregation
+group by function for grouping data when dealing with categorical data
 
+and also involving aggregation to calculate numeric column involved when it necessary
+
+## Basic Grouping and Aggregation
+```
+# basic group by without function
+df.groupby('categorical_column')
+
+# basic group by without function and specify the aggregated column
+df.groupby('categorical_column')['numeric_column']
+
+# basic group by with count 
+df.groupby('categorical_column').count()
+
+# basic group by with sum by total of entire item from each group
+df.groupby('categorical_column').sum()
+
+# basic group by with sum and specify the aggregated column
+df.groupby('categorical_column')['numeric_column'].sum()
+
+# basic group by with mean to view by average item from each group
+df.groupby('categorical_column').mean()
+
+# basic group by with mean and specify the aggregated column
+df.groupby('categorical_column')['numeric_column'].mean()
+
+# basic group by with median to view per median from each group
+df.groupby('categorical_column').median()
+
+# basic group by with median and specify the aggregated column
+df.groupby('categorical_column')['numeric_column'].median()
+
+# basic group by with standard deviation to view per standard deviation
+df.groupby('categorical_column').std()
+
+# basic group by with standard deviation and replace missing numeric by zero
+df.groupby('categorical_column').std().fillna(0)
+
+# group by and count each unique value
+df.groupby('categorical_column').nunique()
+
+# group by with min function to find per minimum value
+df.groupby('categorical_column').min()
+
+# group by with max function to find per maximum value
+df.groupby('categorical_column').max()
+
+# group by with first to find first top row item
+df.groupby('categorical_column').first()
+
+# group by with last to find last bottom row item
+df.groupby('categorical_column').last()
+
+# loop over the group by
+obj = df.groupby('categorical_column')
+
+for name,group in obj:
+    print(name,'contains',group.shape[0],'rows')
+    
+# group by with multiple index
+df.groupby(['categorical_column1', 'categorical_column2'])
+```
+## Grouping and Multiple Aggregation
+```
+# group by with max, first and last aggregation 
+df.groupby('categorical_column').agg(['max','first','last'])
+
+# group by with min, median, mean, and max
+df.groupby('categorical_column').agg(['min','median','mean','max'])
+```
+## Grouping and Custom Aggregation
+group by with pre-defined function by user (or by us as developer)
+
+this pre-defined function applied as custom aggregation on grouped by dataset
+```
+# group by data with range function, contained substraction of max by min
+def data_range(series):
+    return series.max() - series.min()
+
+df.groupby('categorical_column').agg(data_range)
+
+# group by data with interquantile function, contained substraction of quantile_75 by quantile_25
+def iqr(series):
+	Q1 = series.quantile(0.25)
+	Q3 = series.quantile(0.75)
+	return Q3 - Q1
+
+df.groupby('categorical_column').agg(iqr)
+```
+## Grouping and Custom Aggregation by Dict
+applying dict contains 'key' as column and 'value' to customize aggregation at grouped by datafraem
+```
+# group by dict with range function, contained substraction of max by min
+def data_range(series):
+    return series.max() - series.min()
+
+custom_agg_dict = df['value'][['categ_value1','categ_value2']].groupby('categorical_column').agg({
+      # buat agg pake dict
+      'categ_value1':'max',
+      'categ_value2':data_range
+})  
+
+# group by dict with interquantile function, contained substraction of quantile_75 by quantile_25
+def iqr(series):
+	return series.quantile(0.75) - series.quantile(0.25)
+
+custom_agg_dict = df['value'][['categ_value1','categ_value2','categ_value3']].groupby('categorical_column').agg({
+    # pm10 menggunakan median
+   'categ_value1':'median',
+    # menggunakan interquantile
+   'categ_value2':iqr,
+   'categ_value3':iqr
+})
+```
 
 # Data Visualization
 using matplotlib and seborn
