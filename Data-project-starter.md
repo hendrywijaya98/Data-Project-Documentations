@@ -514,6 +514,33 @@ plt.title("Total Area per country", fontsize=20)
 plt.xlabel("Country", fontsize=15)
 plt.ylabel("Total Area in Acres", fontsize=15)
 ```
+## Count plot
+```
+sns.countplot(x='Column_name', data=dataset)
+sns.countplot(x='Column_name', data=dataset[dataset['column']])
+sns.countplot(x='Column_name', data=dataset[dataset['column']==value_column])
+```
+## Visualization Annotation
+```
+# visualization on countplot
+coplot = sns.countplot(x='Category Name', data=influencer_df[influencer_df['Category Group']==1])
+
+for pat in coplot.patches:
+    coplot.annotate(format(pat.get_height(), '.2f'), 
+                    (pat.get_x() + pat.get_width() / 2., pat.get_height()), 
+                    ha = 'center', va = 'center', xytext = (0, 10), 
+                    textcoords = 'offset points')
+# visualization on barchart
+barchart = sns.barplot(x='Category Name', y='Followers', 
+                       data=influencer_df[influencer_df['Category Group']==1])
+
+for pat in barchart.patches:
+    barchart.annotate(format(pat.get_height(), '.0f'),
+                    (pat.get_x() + pat.get_width() / 2., pat.get_height()),
+                    ha = 'center', va = 'center', size=14, xytext = (0, 9), 
+                    textcoords = 'offset points')
+```
+
 # Saving to File
 ```
 # save dataset output as csv file 
