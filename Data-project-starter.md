@@ -55,10 +55,10 @@ df.info()
 df.describe()
 
 # check dataframe describe for categorical column
-df.describe(include=include=['category'])
+df.describe(include = ['category'])
 
 # check dataframe describe for string or object column
-df.describe(include=include=[object])
+df.describe(include = [object])
 
 # check dataset dimension, in this case for column and rows
 df.shape
