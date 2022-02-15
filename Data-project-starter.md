@@ -102,6 +102,22 @@ df[conditions]['column name']
 df_copy = df.copy()
 # add new column with only 1 values in a single series
 df_copy['Sold'] = 'N'
+
+# create column with if-else condition and apply function
+def conditional_column(row):
+    if row['column'] == 'condition a':
+        val = value_1
+    elif row['column'] == 'condition b':
+        val = value_2
+    elif row['column'] == 'condition c':
+        val = value_3
+    elif row['column'] == 'condition d':
+        val = value_4
+    else:
+        val = value_0
+    return val
+    
+df['new_column'] = df.apply(conditional_column, axis=1)
 ```
 ## Adding Rows
 ```
